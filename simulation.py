@@ -16,7 +16,7 @@ class Simulation(object):
 		self.current_infected = (initial_infected)
 		self.virus_name = virus_name
 		self.mortality_rate = (mortality_rate)
-		self.repro_num = (basic_repro_num)
+		self.repro_num = basic_repro_num
 		self.newly_infected = []
 		self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus_name, population_size, vacc_percentage, initial_infected)
 		self.virus = Virus(self.virus_name, self.mortality_rate, self.repro_num)
@@ -58,6 +58,7 @@ class Simulation(object):
 		for stuff in self.population:
 			print(stuff.is_alive, stuff.infected)
 		print('The simulation has ended after {} turns.'.format(time_step_counter))
+		self.logger.log_ending_stats(self.total_dead, time_step_counter)
 
 	def time_step(self):
 		for person in self.population:
@@ -75,11 +76,13 @@ class Simulation(object):
 	def interaction(self, person, random_person):
 		assert person.is_alive == True
 		assert random_person.is_alive == True
-		if random_person.is_vaccinated == False and random_person.infected == None:
+		infect = float(random.uniform(0, 1))
+		print(infect, self.repro_num)
+		if infect < self.repro_num and random_person.is_vaccinated == False and random_person.infected == None:
 			self.newly_infected.append(random_person._id)
-			self.logger.log_interaction(person, random_person, True, False)
+			self.logger.log_interaction(person, random_person, True, random_person.is_vaccinated)
 		else:
-			self.logger.log_interaction(person, random_person, False, True)
+			self.logger.log_interaction(person, random_person, False, random_person.is_vaccinated)
 
 	def _infect_newly_infected(self):
 		if len(self.newly_infected) > 0:

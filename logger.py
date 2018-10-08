@@ -7,7 +7,7 @@ class Logger(object):
 		self.file.write("Population Size: {}\tVaccination Percentage: {}\tVirus Name: {}\tMortality Rate: {}\tReproduction: {}\n".format(pop_size, vacc_percentage, virus_name, mortality_rate, basic_repro_num))
 		self.file.close()
 
-	def log_interaction(self, person1, person2, did_infect = None, person2_vacc = None, person2_sick= None):
+	def log_interaction(self, person1, person2, did_infect, person2_vacc):
 		self.file = open(self.file_name, "a")
 		self.file.write("Interaction between patient {} and citizen{}\nCitizen {} Vaccinated: {}\n".format(person1._id, person2._id, person2._id, person2_vacc))
 		if did_infect == True:
@@ -21,3 +21,7 @@ class Logger(object):
 		else:
 			self.file.write("Patient {} survived the infection\n".format(person._id))
 		self.file.close()
+
+	def log_ending_stats(self, total_dead, counter):
+		self.file = open(self.file_name, "a")
+		self.file.write("Total Deaths: {}\nNumber of Weeks: {}".format(total_dead, counter))
