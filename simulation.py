@@ -55,8 +55,6 @@ class Simulation(object):
 			self.time_step()
 			time_step_counter += 1
 			should_continue = self._simulation_should_continue()
-		for stuff in self.population:
-			print(stuff.is_alive, stuff.infected)
 		print('The simulation has ended after {} turns.'.format(time_step_counter))
 		self.logger.log_ending_stats(self.total_dead, time_step_counter)
 
@@ -70,14 +68,12 @@ class Simulation(object):
 						self.interaction(person, random_p)
 						interactions += 1
 		self.death()
-		#print("stuff")
 		self._infect_newly_infected()
 
 	def interaction(self, person, random_person):
 		assert person.is_alive == True
 		assert random_person.is_alive == True
 		infect = float(random.uniform(0, 1))
-		print(infect, self.repro_num)
 		if infect < self.repro_num and random_person.is_vaccinated == False and random_person.infected == None:
 			self.newly_infected.append(random_person._id)
 			self.logger.log_interaction(person, random_person, True, random_person.is_vaccinated)
